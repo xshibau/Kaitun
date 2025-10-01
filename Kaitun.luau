@@ -1,6 +1,6 @@
 if game.GameId == 7326934954 then
   loadstring(game:HttpGet("https://raw.githubusercontent.com/xshibau/Kaitun/refs/heads/main/Kaitun99night.luau"))()
-elseif game.GameId == 1 then
+elseif game.GameId == 8014099969 then
   loadstring(game:HttpGet(""))()
 else
  local player = game.Players.LocalPlayer or game.Players.PlayerAdded:Wait()
