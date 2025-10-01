@@ -1,5 +1,5 @@
-if game.GameId == 0 then
-  loadstring(game:HttpGet(""))()
+if game.GameId == 7326934954 then
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/xshibau/Kaitun/refs/heads/main/Kaitun99night.luau"))()
 elseif game.GameId == 1 then
   loadstring(game:HttpGet(""))()
 else
