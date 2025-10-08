@@ -1,5 +1,7 @@
 if game.GameId == 7326934954 then
   loadstring(game:HttpGet("https://raw.githubusercontent.com/xshibau/Kaitun/refs/heads/main/Kaitun99night.luau"))()
+elseif game.GameId == 8066283370 then
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/xshibau/Kaitun/refs/heads/main/KaitunBuildaZoo.luau"))()
 elseif game.GameId == 8014099969 then
   loadstring(game:HttpGet("https://raw.githubusercontent.com/xshibau/Kaitun/refs/heads/main/KaitunPTHFM.luau"))()
 else
