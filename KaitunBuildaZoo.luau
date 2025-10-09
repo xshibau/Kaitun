@@ -38,7 +38,7 @@ Version.TextColor3 = Color3.fromRGB(255, 255, 255)
 Version.ZIndex = 39999999
 Version.Parent = ScreenGui
 
-local config = getgenv().Config or {}
+local config = getgenv().config or {}
 
 local function sendEmbedWebhook(message)
 	if config.Url == "" then return end
