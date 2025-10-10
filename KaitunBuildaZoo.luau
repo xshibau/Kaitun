@@ -60,45 +60,6 @@ local Tabs = {
     Main = Window:AddTab({ Title = "Tab Kaitun", Icon = "" }),
     
 }
-task.spawn(function()
-local Lighting = game:GetService("Lighting")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
-
-Lighting.GlobalShadows = false
-Lighting.FogEnd = 1e8
-Lighting.Brightness = 1
-Lighting.OutdoorAmbient = Color3.fromRGB(127,127,127)
-Lighting.ShadowSoftness = 0
-Lighting.ColorShift_Bottom = Color3.fromRGB(127,127,127)
-Lighting.ColorShift_Top = Color3.fromRGB(127,127,127)
-Lighting.Saturation = 0
-Lighting.ClockTime = 12
-
-for _, v in pairs(Workspace:GetDescendants()) do
-    if v:IsA("BasePart") then
-        v.Material = Enum.Material.Plastic
-        v.Reflectance = 0
-        v.CastShadow = false
-    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-        v.Enabled = false
-    elseif v:IsA("Decal") or v:IsA("Texture") then
-        v.Transparency = 1
-    elseif v:IsA("Texture") then
-        v:Destroy()
-    end
-end
-
-game:GetService("RunService").RenderStepped:Connect(function()
-    for _, v in pairs(Workspace:GetDescendants()) do
-        if v:IsA("BasePart") then
-            v.Material = Enum.Material.Plastic
-            v.Reflectance = 0
-            v.CastShadow = false
-        end
-    end
-end)
-end)
 
   Tabs.Main:AddButton({
         Title = "Start Kaitun",
@@ -178,49 +139,41 @@ local Toggle = Tabs.Main:AddToggle("Startwebhookv2", {
         end
     end
 })
-local Main = Tabs.Main:AddSection("Settings")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+task.spawn(function ()
+local Workspace = game:GetService("Workspace")
 
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = PlayerGui
-
-local BlackFrame = Instance.new("Frame")
-BlackFrame.Size = UDim2.new(1,0,1,0)
-BlackFrame.Position = UDim2.new(0,0,0,0)
-BlackFrame.BackgroundColor3 = Color3.new(0,0,0)
-BlackFrame.Visible = getgenv().Settings.FullBlack or false
-BlackFrame.Parent = ScreenGui
-
-local WhiteFrame = Instance.new("Frame")
-WhiteFrame.Size = UDim2.new(1,0,1,0)
-WhiteFrame.Position = UDim2.new(0,0,0,0)
-WhiteFrame.BackgroundColor3 = Color3.new(1,1,1)
-WhiteFrame.Visible = getgenv().Settings.FullWhite or false
-WhiteFrame.Parent = ScreenGui
-
-local ToggleBlack = Tabs.Main:AddToggle("FullBlack", {
-    Title = "Full Black",
-    Default = getgenv().Settings.FullBlack or false,
-    Callback = function(Value)
-        BlackFrame.Visible = Value
-        if Value then WhiteFrame.Visible = false end
-        getgenv().Settings.FullBlack = Value
-        SaveSetting()
+for _, v in pairs(Workspace:GetDescendants()) do
+    if v:IsA("BasePart") then
+        local col = v.Color
+        if col ~= Color3.new(0.5,0.5,0.5) then
+            v:Destroy()
+        else
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+            v.CastShadow = false
+        end
+    elseif v:IsA("Model") then
+        local destroyModel = false
+        for _, child in pairs(v:GetDescendants()) do
+            if child:IsA("BasePart") then
+                local col = child.Color
+                if col ~= Color3.new(0.5,0.5,0.5) then
+                    destroyModel = true
+                    break
+                end
+            elseif child:IsA("Decal") or child:IsA("Texture") or child:IsA("ParticleEmitter") or child:IsA("Trail") then
+                destroyModel = true
+                break
+            end
+        end
+        if destroyModel then
+            v:Destroy()
+        end
+    elseif v:IsA("Decal") or v:IsA("Texture") or v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v:Destroy()
     end
-})
-
-local ToggleWhite = Tabs.Main:AddToggle("FullWhite", {
-    Title = "Full White",
-    Default = getgenv().Settings.FullWhite or false,
-    Callback = function(Value)
-        WhiteFrame.Visible = Value
-        if Value then BlackFrame.Visible = false end
-        getgenv().Settings.FullWhite = Value
-        SaveSetting()
-    end
-})
+end
+end)
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Image = "rbxthumb://type=Asset&id=106019376492019&w=420&h=420"
 getgenv().ToggleUI = "RightControl"
