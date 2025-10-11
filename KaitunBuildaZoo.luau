@@ -78,7 +78,7 @@ local Tabs = {
               if (hrp.Position - targetCFrame.Position).magnitude > 1 then
                   hrp.CFrame = targetCFrame
               end
-              wait(0.05)
+              wait()
           end
       end)
 
