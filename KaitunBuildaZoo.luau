@@ -1,3 +1,30 @@
+getgenv().Image = "rbxthumb://type=Asset&id=106019376492019&w=420&h=420"
+getgenv().ToggleUI = "RightShift"
+
+task.spawn(function()
+    if not getgenv().LoadedMobileUI then
+        getgenv().LoadedMobileUI = true
+        local OpenUI = Instance.new("ScreenGui")
+        local ImageButton = Instance.new("ImageButton")
+        local UICorner = Instance.new("UICorner")
+        OpenUI.Name = "OpenUI"
+        OpenUI.Parent = game:GetService("CoreGui")
+        OpenUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        ImageButton.Parent = OpenUI
+        ImageButton.BackgroundColor3 = Color3.fromRGB(105, 105, 105)
+        ImageButton.BackgroundTransparency = 0.8
+        ImageButton.Position = UDim2.new(0, 20, 0, 25)
+        ImageButton.Size = UDim2.new(0, 50, 0, 50)
+        ImageButton.Image = getgenv().Image
+        ImageButton.Draggable = true
+        ImageButton.Transparency = 1
+        UICorner.CornerRadius = UDim.new(0,13)
+        UICorner.Parent = ImageButton
+        ImageButton.MouseButton1Click:Connect(function()
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, getgenv().ToggleUI, false, game)
+        end)
+    end
+end)
 local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 
@@ -94,6 +121,17 @@ timeText.Parent = imageRight
 
 local timeCorner = Instance.new("UICorner")
 timeCorner.Parent = timeText
+
+local UIS = game:GetService("UserInputService")
+local guiVisible = true
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end
+	if input.KeyCode == Enum.KeyCode.RightShift then
+		guiVisible = not guiVisible
+		ScreenGui.Enabled = guiVisible
+	end
+end)
 
 local startTime = tick()
 task.spawn(function()
