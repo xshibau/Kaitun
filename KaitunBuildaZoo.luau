@@ -1,168 +1,115 @@
-getgenv().Image = "rbxthumb://type=Asset&id=106019376492019&w=420&h=420"
-getgenv().ToggleUI = "RightShift"
+if not _G.HideUi then
+    local Player = game.Players.LocalPlayer
+    local PlayerGui = Player:WaitForChild("PlayerGui")
 
-task.spawn(function()
-    if not getgenv().LoadedMobileUI then
-        getgenv().LoadedMobileUI = true
-        local OpenUI = Instance.new("ScreenGui")
-        local ImageButton = Instance.new("ImageButton")
-        local UICorner = Instance.new("UICorner")
-        OpenUI.Name = "OpenUI"
-        OpenUI.Parent = game:GetService("CoreGui")
-        OpenUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        ImageButton.Parent = OpenUI
-        ImageButton.BackgroundColor3 = Color3.fromRGB(105, 105, 105)
-        ImageButton.BackgroundTransparency = 0.8
-        ImageButton.Position = UDim2.new(0, 20, 0, 25)
-        ImageButton.Size = UDim2.new(0, 50, 0, 50)
-        ImageButton.Image = getgenv().Image
-        ImageButton.Draggable = true
-        ImageButton.Transparency = 1
-        UICorner.CornerRadius = UDim.new(0,13)
-        UICorner.Parent = ImageButton
-        ImageButton.MouseButton1Click:Connect(function()
-            game:GetService("VirtualInputManager"):SendKeyEvent(true, getgenv().ToggleUI, false, game)
-        end)
-    end
-end)
-local Players = game:GetService("Players")
-local CollectionService = game:GetService("CollectionService")
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = PlayerGui
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-screenGui.Parent = game:GetService("CoreGui")
-CollectionService:AddTag(screenGui, "main")
+    local Frame = Instance.new("Frame")
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.Size = UDim2.new(0, 492, 0, 336)
+    Frame.Position = UDim2.new(0, 130, 0, -48)
+    Frame.BackgroundTransparency = 0.5
+    Frame.BorderSizePixel = 0
+    Frame.Active = true
+    Frame.Draggable = true
+    Instance.new("UICorner", Frame)
+    local Stroke = Instance.new("UIStroke", Frame)
+    Stroke.Thickness = 3
 
-local mainFrame = Instance.new("Frame")
-mainFrame.BackgroundColor3 = Color3.fromRGB(219, 219, 219)
-mainFrame.BackgroundTransparency = 0.4
-mainFrame.BorderColor3 = Color3.fromRGB(28, 42, 54)
-mainFrame.BorderSizePixel = 0
-mainFrame.Position = UDim2.new(0.08152, 0, -0.15563, 0)
-mainFrame.Size = UDim2.new(0.83424, 0, 1.11258, 0)
-mainFrame.Parent = screenGui
+    local TopFrame = Instance.new("Frame")
+    TopFrame.Parent = Frame
+    TopFrame.BackgroundColor3 = Color3.fromRGB(26, 255, 175)
+    TopFrame.Size = UDim2.new(0, 458, 0, 52)
+    TopFrame.Position = UDim2.new(0, 20, 0, 10)
+    TopFrame.BackgroundTransparency = 0.5
+    TopFrame.BorderSizePixel = 0
+    Instance.new("UICorner", TopFrame)
+    local TopStroke = Instance.new("UIStroke", TopFrame)
+    TopStroke.Thickness = 2
+    TopStroke.Color = Color3.fromRGB(255, 255, 255)
 
-local mainCorner = Instance.new("UICorner")
-mainCorner.Parent = mainFrame
+    local Title = Instance.new("TextLabel")
+    Title.Parent = TopFrame
+    Title.TextWrapped = true
+    Title.BorderSizePixel = 0
+    Title.TextScaled = true
+    Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Title.FontFace = Font.new("rbxasset://fonts/families/PressStart2P.json")
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.Size = UDim2.new(1, 0, 0, 50)
+    Title.Text = "Aura Hub Kaitun"
+    local TitleStroke = Instance.new("UIStroke", Title)
+    TitleStroke.Thickness = 2
 
-local innerFrame = Instance.new("Frame")
-innerFrame.BackgroundColor3 = Color3.fromRGB(52, 52, 52)
-innerFrame.BorderSizePixel = 0
-innerFrame.BorderColor3 = Color3.fromRGB(28, 42, 54)
-innerFrame.Position = UDim2.new(0.01954, 0, 0.02976, 0)
-innerFrame.Size = UDim2.new(0.96417, 0, 0.94643, 0)
-innerFrame.Parent = mainFrame
+    task.spawn(function()
+        local t = 0
+        while task.wait() do
+            t += 1
+            local color = Color3.fromHSV((t % 255) / 255, 1, 1)
+            Title.TextColor3 = color
+            TitleStroke.Color = color
+        end
+    end)
 
-local innerCorner = Instance.new("UICorner")
-innerCorner.Parent = innerFrame
+    local Body = Instance.new("Frame")
+    Body.Parent = Frame
+    Body.BorderSizePixel = 0
+    Body.BackgroundColor3 = Color3.fromRGB(0, 255, 28)
+    Body.Size = UDim2.new(0, 458, 0, 256)
+    Body.Position = UDim2.new(0, 20, 0, 70)
+    Body.BackgroundTransparency = 0.5
+    Instance.new("UICorner", Body)
+    local BodyStroke = Instance.new("UIStroke", Body)
+    BodyStroke.Thickness = 2
+    BodyStroke.Color = Color3.fromRGB(255, 255, 255)
 
-local auraLabel = Instance.new("TextLabel")
-auraLabel.TextWrapped = true
-auraLabel.BorderSizePixel = 0
-auraLabel.TextSize = 14
-auraLabel.TextScaled = true
-auraLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-auraLabel.FontFace = Font.new("rbxasset://fonts/families/Balthazar.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-auraLabel.Size = UDim2.new(0.96622, 0, 0.10692, 0)
-auraLabel.Text = "Aura Hub | Premium"
-auraLabel.Name = "aura"
-auraLabel.Position = UDim2.new(0.01689, 0, 0.86792, 0)
-auraLabel.Parent = innerFrame
+    local Img = Instance.new("ImageLabel")
+    Img.Parent = Body
+    Img.BorderSizePixel = 0
+    Img.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Img.Image = "rbxthumb://type=Asset&id=15423490216&w=420&h=420"
+    Img.Size = UDim2.new(0, 114, 0, 118)
+    Img.BackgroundTransparency = 1
+    Img.Position = UDim2.new(0, 0, 0, 72)
+    Instance.new("UICorner", Img)
 
-local auraCorner = Instance.new("UICorner")
-auraCorner.Parent = auraLabel
+    local Number = Instance.new("TextLabel")
+    Number.Parent = Body
+    Number.TextWrapped = true
+    Number.TextStrokeTransparency = 0
+    Number.BorderSizePixel = 0
+    Number.TextSize = 100
+    Number.TextXAlignment = Enum.TextXAlignment.Left
+    Number.BackgroundColor3 = Color3.fromRGB(157, 255, 139)
+    Number.FontFace = Font.new("rbxasset://fonts/families/Arial.json", Enum.FontWeight.Bold)
+    Number.TextColor3 = Color3.fromRGB(96, 161, 24)
+    Number.BackgroundTransparency = 1
+    Number.Size = UDim2.new(0, 344, 0, 132)
+    Number.Text = "0"
+    Number.Position = UDim2.new(0, 104, 0, 64)
+    local NumberStroke = Instance.new("UIStroke", Number)
+    NumberStroke.Thickness = 2
+    NumberStroke.Color = Color3.fromRGB(255, 255, 255)
 
-local imageLeft = Instance.new("ImageLabel")
-imageLeft.BorderSizePixel = 0
-imageLeft.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-imageLeft.Image = "rbxthumb://type=Asset&id=95335710234242&w=420&h=420"
-imageLeft.Size = UDim2.new(0.34122, 0, 0.83019, 0)
-imageLeft.Position = UDim2.new(0.01689, 0, 0.01887, 0)
-imageLeft.Parent = innerFrame
-
-local leftCorner = Instance.new("UICorner")
-leftCorner.Parent = imageLeft
-
-local imageRight = Instance.new("ImageLabel")
-imageRight.BorderSizePixel = 0
-imageRight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-imageRight.Image = "rbxthumb://type=Asset&id=95335710234242&w=420&h=420"
-imageRight.Size = UDim2.new(0.61486, 0, 0.83019, 0)
-imageRight.Position = UDim2.new(0.36824, 0, 0.01887, 0)
-imageRight.Parent = innerFrame
-
-local rightCorner = Instance.new("UICorner")
-rightCorner.Parent = imageRight
-
-local topText = Instance.new("TextLabel")
-topText.TextWrapped = true
-topText.BorderSizePixel = 0
-topText.Text = "Aura Hub | New Ui"
-topText.TextScaled = true
-topText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-topText.FontFace = Font.new("rbxasset://fonts/families/DenkOne.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-topText.Size = UDim2.new(0.91209, 0, 0.14394, 0)
-topText.Position = UDim2.new(0.04396, 0, 0.02273, 0)
-topText.Parent = imageRight
-
-local textCorner = Instance.new("UICorner")
-textCorner.Parent = topText
-
-local timeText = Instance.new("TextLabel")
-timeText.TextWrapped = true
-timeText.BorderSizePixel = 0
-timeText.Text = "Time in Server: 0s"
-timeText.TextScaled = true
-timeText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-timeText.FontFace = Font.new("rbxasset://fonts/families/DenkOne.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-timeText.Size = UDim2.new(0.91209, 0, 0.14394, 0)
-timeText.Position = UDim2.new(0.04396, 0, 0.02273, 0)
-timeText.Parent = imageRight
-
-local timeCorner = Instance.new("UICorner")
-timeCorner.Parent = timeText
-
-local UIS = game:GetService("UserInputService")
-local guiVisible = true
-
-UIS.InputBegan:Connect(function(input, gameProcessed)
-	if gameProcessed then return end
-	if input.KeyCode == Enum.KeyCode.RightShift then
-		guiVisible = not guiVisible
-		ScreenGui.Enabled = guiVisible
-	end
-end)
-
-local startTime = tick()
-task.spawn(function()
-	while task.wait(1) do
-		local elapsed = math.floor(tick() - startTime)
-		timeText.Text = "Time in Server: " .. elapsed .. "s"
-	end
-end)
-
-local diamondText = Instance.new("TextLabel")
-diamondText.TextWrapped = true
-diamondText.BorderSizePixel = 0
-diamondText.Text = "Coins: 0"
-diamondText.TextScaled = true
-diamondText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-diamondText.FontFace = Font.new("rbxasset://fonts/families/DenkOne.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-diamondText.Size = UDim2.new(0.91209, 0, 0.14394, 0)
-diamondText.Position = UDim2.new(timeText.Position.X.Scale, timeText.Position.X.Offset, timeText.Position.Y.Scale, timeText.Position.Y.Offset + 50)
-diamondText.Parent = imageRight
-
-local diamondCorner = Instance.new("UICorner")
-diamondCorner.Parent = diamondText
-
-task.spawn(function()
-	local player = game:GetService("Players").LocalPlayer
-	local diamondValue = player:WaitForChild("Diamond")
-	diamondText.Text = "Coins: " .. tostring(diamondValue.Value)
-	diamondValue:GetPropertyChangedSignal("Value"):Connect(function()
-		diamondText.Text = "Coins: " .. tostring(diamondValue.Value)
-	end)
-end)
+    local Footer = Instance.new("TextLabel")
+    Footer.Parent = Body
+    Footer.TextWrapped = true
+    Footer.BorderSizePixel = 0
+    Footer.TextScaled = true
+    Footer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Footer.FontFace = Font.new("rbxasset://fonts/families/PressStart2P.json")
+    Footer.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Footer.BackgroundTransparency = 1
+    Footer.Size = UDim2.new(0, 460, 0, 52)
+    Footer.Text = "Build a Zoo - Kaitun Fish"
+    Instance.new("UICorner", Footer)
+    local FooterStroke = Instance.new("UIStroke", Footer)
+    FooterStroke.Thickness = 2
+end
 
 task.spawn(function()
 local player = game.Players.LocalPlayer
@@ -210,5 +157,3 @@ for _, v in pairs(workspace:GetDescendants()) do
 	end
 end
 end)
-
-return screenGui
