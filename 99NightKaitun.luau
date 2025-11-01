@@ -341,7 +341,6 @@ task.spawn(function()
         task.wait(0.1)
     end
 end)
-end)
 
 end)
 task.spawn(function()
