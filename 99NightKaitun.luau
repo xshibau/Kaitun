@@ -81,7 +81,7 @@
     Number.TextWrapped = true
     Number.TextStrokeTransparency = 0
     Number.BorderSizePixel = 0
-    Number.TextSize = 100
+    Number.TextSize = 35
     Number.TextXAlignment = Enum.TextXAlignment.Left
     Number.BackgroundColor3 = Color3.fromRGB(157, 255, 139)
     Number.FontFace = Font.new("rbxasset://fonts/families/Arial.json", Enum.FontWeight.Bold)
@@ -104,7 +104,7 @@
     Footer.TextColor3 = Color3.fromRGB(255, 255, 255)
     Footer.BackgroundTransparency = 1
     Footer.Size = UDim2.new(0, 460, 0, 52)
-    Footer.Text = "99 Night In Forest - Kaitun Diamond v2"
+    Footer.Text = "Auto Find Diamond (Chest)"
     Instance.new("UICorner", Footer)
     local FooterStroke = Instance.new("UIStroke", Footer)
     FooterStroke.Thickness = 2
