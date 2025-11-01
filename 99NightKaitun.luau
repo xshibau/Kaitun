@@ -237,111 +237,99 @@ elseif game.PlaceId == 126509999114328 then
 	while timeLeft >= 0 do
 		local minutes = string.format("%02d", math.floor(timeLeft / 60))
 		local seconds = string.format("%02d", timeLeft % 60)
-		Number.Text = "New Server:" .. minutes .. ":" .. seconds
+		Number.Text = "New Server: " .. minutes .. ":" .. seconds
 		task.wait(1)
 		timeLeft -= 1
 	end
     end)
 task.spawn(function()
-local TweenService = game:GetService("TweenService")
+task.wait(15)
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
--- ==== Bring setup ====
-_G.AutoLogBring = true
-if not _G.broughtModelsPermanent then _G.broughtModelsPermanent = {} end
-local modelNames = {"Log","Fuel","Coal"}
-local bringCFrame = CFrame.new(0.030501961708068848, 3.294840097427368, 0.24263590574264526)
-
-local function tweenToCFrame(targetCFrame)
-    local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
-    tween:Play()
-    tween.Completed:Wait()
+if not _G.AutoChestData then
+    _G.AutoChestData = {running = false}
 end
 
--- ==== Bring Loop ====
-task.spawn(function()
-    Footer = "Auto Camp Fire"
-    local startTime = tick()
-    while _G.AutoLogBring and tick() - startTime < 30 do -- 5 phút
-        for _, model in pairs(workspace:GetDescendants()) do
-            if model:IsA("Model") and model.PrimaryPart and table.find(modelNames, model.Name) and not _G.broughtModelsPermanent[model] then
-                -- Bay tới model
-                tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,-5,0))
-                
-                -- Bring model về vị trí cố định
-                local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                local tweenModel = TweenService:Create(model.PrimaryPart, tweenInfo, {CFrame = bringCFrame})
-                tweenModel:Play()
-                tweenModel.Completed:Wait()
-                
-                _G.broughtModelsPermanent[model] = true
-                task.wait(0.15)
-            end
+local function getChests()
+    local chests = {}
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and string.find(obj.Name, "Item Chest") then
+            table.insert(chests, obj)
         end
-        task.wait(0.1)
     end
-    _G.AutoLogBring = false
+    return chests
+end
 
-    -- ==== Auto Chest sau khi Bring xong ====
-    if not _G.AutoChestData then
-        _G.AutoChestData = {running = true}
-    end
-
-    local function getChests()
-        local chests = {}
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            if obj:IsA("Model") and string.find(obj.Name, "Item Chest") then
-                table.insert(chests, obj)
-            end
+local function getPrompt(model)
+    local prompts = {}
+    for _, obj in ipairs(model:GetDescendants()) do
+        if obj:IsA("ProximityPrompt") then
+            table.insert(prompts, obj)
         end
-        return chests
     end
+    return prompts
+end
 
-    local function getPrompt(model)
-        local prompts = {}
-        for _, obj in ipairs(model:GetDescendants()) do
-            if obj:IsA("ProximityPrompt") then
-                table.insert(prompts, obj)
-            end
-        end
-        return prompts
-    end
+local function clickMiddleScreen()
+    local VirtualUser = game:GetService("VirtualUser")
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton1(Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2))
+end
 
-    local function clickMiddleScreen()
-        local VirtualUser = game:GetService("VirtualUser")
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton1(Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2))
-    end
-
+if not _G.AutoChestData.running then
     _G.AutoChestData.running = true
-    while _G.AutoChestData.running do
-        Footer.Text = "Auto Open Chest"
-        local chests = getChests()
-        for _, chest in ipairs(chests) do
-            local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
-            if part then
-                local prompts = getPrompt(chest)
-                for _, prompt in ipairs(prompts) do
-                    fireproximityprompt(prompt, math.huge)
-                end
-                local t = tick()
-                while tick() - t < 5 do
-                    humanoidRootPart.CFrame = part.CFrame + Vector3.new(0,6,0)
-                    humanoidRootPart.Velocity = Vector3.zero
-                    humanoidRootPart.RotVelocity = Vector3.zero
-                    clickMiddleScreen()
-                    task.wait()
+    task.spawn(function()
+        while _G.AutoChestData.running do
+            local chests = getChests()
+            for _, chest in ipairs(chests) do
+                if not _G.AutoChestData.running then break end
+                local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    local prompts = getPrompt(chest)
+                    for _, prompt in ipairs(prompts) do
+                        fireproximityprompt(prompt, math.huge)
+                    end
+                    local t = tick()
+                    while _G.AutoChestData.running and tick() - t < 5 do
+                        humanoidRootPart.CFrame = part.CFrame + Vector3.new(0, 6, 0)
+                        humanoidRootPart.Velocity = Vector3.zero
+                        humanoidRootPart.RotVelocity = Vector3.zero
+                        clickMiddleScreen()
+                        task.wait()
+                    end
                 end
             end
+            task.wait(0.1)
         end
-        task.wait(0.1)
-    end
+    end)
+end
 end)
+task.spawn(function()
+_G.AutoLogBring = true
+        if not _G.broughtModelsPermanent then _G.broughtModelsPermanent = {} end
+        if not Value then return end
 
+        task.spawn(function()
+            local cookPos = CFrame.new(0.5406733,12.499372,-0.7186632)
+            local modelNames = {"Log","Fuel","Coal"}
+
+            while _G.AutoLogBring do
+                task.wait(0.1)
+
+                for _, possibleModel in pairs(workspace:GetDescendants()) do
+                    if possibleModel:IsA("Model") and possibleModel.PrimaryPart and table.find(modelNames, possibleModel.Name) then
+                        if not _G.broughtModelsPermanent[possibleModel] then
+                            possibleModel:SetPrimaryPartCFrame(cookPos)
+                            _G.broughtModelsPermanent[possibleModel] = true
+                            task.wait(0.15)
+                        end
+                    end
+                end
+            end
+        end)
 end)
 task.spawn(function()
 local Players = game:GetService("Players")
