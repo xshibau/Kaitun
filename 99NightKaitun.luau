@@ -233,7 +233,7 @@ elseif game.PlaceId == 126509999114328 then
     local FooterStroke = Instance.new("UIStroke", Footer)
     FooterStroke.Thickness = 2
     task.spawn(function()
-	local timeLeft = 400
+	local timeLeft = 60
 	while timeLeft >= 0 do
 		local minutes = string.format("%02d", math.floor(timeLeft / 60))
 		local seconds = string.format("%02d", timeLeft % 60)
@@ -253,7 +253,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 _G.AutoLogBring = true
 if not _G.broughtModelsPermanent then _G.broughtModelsPermanent = {} end
 local modelNames = {"Log","Fuel","Coal"}
-local bringCFrame = CFrame.new(0.5406733,12.499372,-0.7186632)
+local bringCFrame = CFrame.new(0.030501961708068848, 3.294840097427368, 0.24263590574264526)
 
 local function tweenToCFrame(targetCFrame)
     local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -264,12 +264,13 @@ end
 
 -- ==== Bring Loop ====
 task.spawn(function()
+    Footer = "Auto Camp Fire"
     local startTime = tick()
-    while _G.AutoLogBring and tick() - startTime < 300 do -- 5 phút
+    while _G.AutoLogBring and tick() - startTime < 30 do -- 5 phút
         for _, model in pairs(workspace:GetDescendants()) do
             if model:IsA("Model") and model.PrimaryPart and table.find(modelNames, model.Name) and not _G.broughtModelsPermanent[model] then
                 -- Bay tới model
-                tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,3,0))
+                tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,-5,0))
                 
                 -- Bring model về vị trí cố định
                 local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -318,6 +319,7 @@ task.spawn(function()
 
     _G.AutoChestData.running = true
     while _G.AutoChestData.running do
+        Footer.Text = "Auto Open Chest"
         local chests = getChests()
         for _, chest in ipairs(chests) do
             local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
@@ -348,7 +350,7 @@ local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer
 local PLACE_ID = game.PlaceId
 
-task.delay(400, function()
+task.delay(60, function()
     TeleportService:Teleport(PLACE_ID, player)
 end)
 end)
