@@ -254,40 +254,8 @@ _G.AutoLogBring = true
 if not _G.broughtModelsPermanent then _G.broughtModelsPermanent = {} end
 local modelNames = {"Log","Fuel","Coal"}
 
--- ==== Auto Chest setup ====
-if not _G.AutoChestData then
-    _G.AutoChestData = {running = false}
-end
-
-local function getChests()
-    local chests = {}
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Model") and string.find(obj.Name, "Item Chest") then
-            table.insert(chests, obj)
-        end
-    end
-    return chests
-end
-
-local function getPrompt(model)
-    local prompts = {}
-    for _, obj in ipairs(model:GetDescendants()) do
-        if obj:IsA("ProximityPrompt") then
-            table.insert(prompts, obj)
-        end
-    end
-    return prompts
-end
-
-local function clickMiddleScreen()
-    local VirtualUser = game:GetService("VirtualUser")
-    VirtualUser:CaptureController()
-    VirtualUser:ClickButton1(Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2))
-end
-
--- ==== Tween Player to Model ====
 local function tweenToCFrame(targetCFrame)
-    local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
     tween:Play()
     tween.Completed:Wait()
@@ -295,25 +263,55 @@ end
 
 -- ==== Bring Loop ====
 task.spawn(function()
-    local bringStart = tick()
-    while _G.AutoLogBring and tick() - bringStart < 300 do -- 5 phút
+    Footer.Text = "Auto Caml Fire"
+    local startTime = tick()
+    while _G.AutoLogBring and tick() - startTime < 300 do -- 5 phút
         for _, model in ipairs(workspace:GetDescendants()) do
             if model:IsA("Model") and model.PrimaryPart and table.find(modelNames, model.Name) and not _G.broughtModelsPermanent[model] then
-                tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,3,0)) -- bay tới trên model
-                model:SetPrimaryPartCFrame(humanoidRootPart.CFrame) -- bring model về player
+                tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,3,0))
+                model:SetPrimaryPartCFrame(humanoidRootPart.CFrame)
                 _G.broughtModelsPermanent[model] = true
                 task.wait(0.1)
             end
         end
         task.wait(0.2)
     end
-    _G.AutoLogBring = false -- tắt phần bring xong 5 phút
-end)
+    _G.AutoLogBring = false
 
--- ==== Auto Chest ====
-task.spawn(function()
+    -- ==== Auto Chest sau khi Bring xong ====
+    if not _G.AutoChestData then
+        _G.AutoChestData = {running = true}
+    end
+
+    local function getChests()
+        local chests = {}
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and string.find(obj.Name, "Item Chest") then
+                table.insert(chests, obj)
+            end
+        end
+        return chests
+    end
+
+    local function getPrompt(model)
+        local prompts = {}
+        for _, obj in ipairs(model:GetDescendants()) do
+            if obj:IsA("ProximityPrompt") then
+                table.insert(prompts, obj)
+            end
+        end
+        return prompts
+    end
+
+    local function clickMiddleScreen()
+        local VirtualUser = game:GetService("VirtualUser")
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton1(Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2))
+    end
+
     _G.AutoChestData.running = true
     while _G.AutoChestData.running do
+        Footer.Text = "Auto Diamond Farm"
         local chests = getChests()
         for _, chest in ipairs(chests) do
             local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
@@ -335,6 +333,7 @@ task.spawn(function()
         task.wait(0.1)
     end
 end)
+
 end)
 task.spawn(function()
 local Players = game:GetService("Players")
@@ -342,7 +341,7 @@ local TeleportService = game:GetService("TeleportService")
 local player = Players.LocalPlayer
 local PLACE_ID = game.PlaceId
 
-task.delay(30, function()
+task.delay(400, function()
     TeleportService:Teleport(PLACE_ID, player)
 end)
 end)
