@@ -233,7 +233,7 @@ elseif game.PlaceId == 126509999114328 then
     local FooterStroke = Instance.new("UIStroke", Footer)
     FooterStroke.Thickness = 2
     task.spawn(function()
-	local timeLeft = 30
+	local timeLeft = 400
 	while timeLeft >= 0 do
 		local minutes = string.format("%02d", math.floor(timeLeft / 60))
 		local seconds = string.format("%02d", timeLeft % 60)
@@ -253,6 +253,7 @@ local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 _G.AutoLogBring = true
 if not _G.broughtModelsPermanent then _G.broughtModelsPermanent = {} end
 local modelNames = {"Log","Fuel","Coal"}
+local bringCFrame = CFrame.new(0.5406733,12.499372,-0.7186632)
 
 local function tweenToCFrame(targetCFrame)
     local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -263,18 +264,24 @@ end
 
 -- ==== Bring Loop ====
 task.spawn(function()
-    Footer.Text = "Auto Caml Fire"
     local startTime = tick()
     while _G.AutoLogBring and tick() - startTime < 300 do -- 5 phút
-        for _, model in ipairs(workspace:GetDescendants()) do
+        for _, model in pairs(workspace:GetDescendants()) do
             if model:IsA("Model") and model.PrimaryPart and table.find(modelNames, model.Name) and not _G.broughtModelsPermanent[model] then
+                -- Bay tới model
                 tweenToCFrame(model.PrimaryPart.CFrame + Vector3.new(0,3,0))
-                model:SetPrimaryPartCFrame(humanoidRootPart.CFrame)
+                
+                -- Bring model về vị trí cố định
+                local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                local tweenModel = TweenService:Create(model.PrimaryPart, tweenInfo, {CFrame = bringCFrame})
+                tweenModel:Play()
+                tweenModel.Completed:Wait()
+                
                 _G.broughtModelsPermanent[model] = true
-                task.wait(0.1)
+                task.wait(0.15)
             end
         end
-        task.wait(0.2)
+        task.wait(0.1)
     end
     _G.AutoLogBring = false
 
@@ -311,7 +318,6 @@ task.spawn(function()
 
     _G.AutoChestData.running = true
     while _G.AutoChestData.running do
-        Footer.Text = "Auto Diamond Farm"
         local chests = getChests()
         for _, chest in ipairs(chests) do
             local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
@@ -332,6 +338,7 @@ task.spawn(function()
         end
         task.wait(0.1)
     end
+end)
 end)
 
 end)
